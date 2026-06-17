@@ -33,7 +33,7 @@ app.get('/health', (req, res) => {
 });
 
 app.post('/render', async (req, res) => {
-  const { image_url, audio_id, duration = 15, width = 540, height = 960 } = req.body;
+  const { image_url, audio_id, duration = 15, width = 480, height = 854 } = req.body;
 
   if (!image_url) {
     return res.status(400).json({ error: 'image_url is required' });
@@ -58,13 +58,7 @@ app.post('/render', async (req, res) => {
       await downloadFile(audioUrl, audioPath);
 
       // Ultra-low memory FFmpeg command
-      ffmpegCmd = `ffmpeg -y -loop 1 -i "${imagePath}" -i "${audioPath}" \
-        -vf "scale=${width}:${height}:flags=lanczos,format=yuv420p" \
-        -c:v libx264 -preset ultrafast -crf 32 \
-        -c:a aac -b:a 96k \
-        -t ${duration} -shortest \
-        -threads 1 -bufsize 512k \
-        "${outputPath}"`;
+     ffmpegCmd = `ffmpeg -y -loop 1 -i "${imagePath}" -i "${audioPath}" -vf "scale=480:854:flags=fast_bilinear,format=yuv420p" -c:v libx264 -preset ultrafast -tune stillimage -crf 35 -c:a aac -b:a 64k -t ${duration} -shortest -threads 1 -max_muxing_queue_size 400 "${outputPath}"`;
     } else {
       ffmpegCmd = `ffmpeg -y -loop 1 -i "${imagePath}" \
         -vf "scale=${width}:${height}:flags=lanczos,format=yuv420p" \
