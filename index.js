@@ -60,7 +60,7 @@ app.post('/render', async (req, res) => {
       // Ultra-low memory FFmpeg command
       ffmpegCmd = `ffmpeg -y -loop 1 -i "${imagePath}" -i "${audioPath}" \
         -vf "scale=${width}:${height}:flags=lanczos,format=yuv420p" \
-        -c:v libx264 -preset ultrafast -crf 28 \
+        -c:v libx264 -preset ultrafast -crf 32 \
         -c:a aac -b:a 96k \
         -t ${duration} -shortest \
         -threads 1 -bufsize 512k \
