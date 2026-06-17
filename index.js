@@ -33,7 +33,7 @@ app.get('/health', (req, res) => {
 });
 
 app.post('/render', async (req, res) => {
-  const { image_url, audio_id, duration = 15, width = 1080, height = 1920 } = req.body;
+  const { image_url, audio_id, duration = 15, width = 540, height = 960 } = req.body;
 
   if (!image_url) {
     return res.status(400).json({ error: 'image_url is required' });
